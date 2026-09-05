@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Interactivo - Sistemas de Información Empresarial</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Vis.js para el grafo interactivo -->
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Fondo animado -->
+    <div class="bg-animated"></div>
+
+    <header>
+        <h1>Sistemas de Información Empresarial</h1>
+        <p>Sesión 4: Modelado de Procesos y BPMN (Caso 03)</p>
+    </header>
+
+    <div class="container">
+        <!-- Contenedor del grafo -->
+        <div id="mynetwork"></div>
+        
+        <!-- Panel de detalles flotante (Glassmorphism) -->
+        <div id="info-panel" class="hidden">
+            <button id="close-btn">&times;</button>
+            <h2 id="info-title">Título</h2>
+            <p id="info-desc">Selecciona un nodo para ver los detalles aquí.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
