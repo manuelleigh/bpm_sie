@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Caso Práctico 02 - Logística</title>
-    <!-- bpmn-js para renderizar el diagrama BPMN real -->
+    <!-- bpmn-js Modeler para renderizar el diagrama completo e interactivo -->
     <link rel="stylesheet" href="https://unpkg.com/bpmn-js/dist/assets/diagram-js.css" />
     <link rel="stylesheet" href="https://unpkg.com/bpmn-js/dist/assets/bpmn-font/css/bpmn.css" />
-    <script src="https://unpkg.com/bpmn-js/dist/bpmn-viewer.development.js"></script>
+    <script src="https://unpkg.com/bpmn-js/dist/bpmn-modeler.development.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
             color: #333;
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 20px;
             background-color: #f9f9f9;
@@ -39,17 +39,13 @@
             border-bottom: 1px solid #eee;
             padding-bottom: 8px;
         }
-        /* Contenedor del visor BPMN */
+        /* Contenedor del modelador BPMN */
         #bpmn-container {
             width: 100%;
-            height: 500px;
+            height: 700px;
             border: 1px solid #ccc;
             background-color: #fff;
             border-radius: 4px;
-            cursor: grab;
-        }
-        #bpmn-container:active {
-            cursor: grabbing;
         }
         .hint {
             font-size: 0.9em;
@@ -81,156 +77,298 @@
         <h2>3. Ciclo de Vida BPM Aplicado</h2>
         <ul>
             <li><strong>Diseño:</strong> Levantamiento del proceso manual actual (As-Is) e identificación del cuello de botella en la asignación de rutas.</li>
-            <li><strong>Modelado:</strong> Creación del flujo de proceso mejorado (To-Be) utilizando notación estándar BPMN, separando las tareas humanas de las automatizadas por el sistema.</li>
-            <li><strong>Ejecución:</strong> Integración del nuevo software TMS con el área operativa y capacitación a los despachadores.</li>
-            <li><strong>Monitoreo:</strong> Medición de tiempos de despacho y porcentaje de entregas a tiempo.</li>
+            <li><strong>Modelado:</strong> Creación del flujo de proceso mejorado (To-Be) utilizando notación estándar BPMN, separando las tareas humanas de las automatizadas por el sistema (Ver diagrama).</li>
+            <li><strong>Ejecución:</strong> Integración del nuevo software TMS con el área operativa y aplicación móvil para los conductores.</li>
+            <li><strong>Monitoreo:</strong> Medición de tiempos de despacho y porcentaje de entregas a tiempo (KPI).</li>
             <li><strong>Optimización:</strong> Ajuste de los parámetros del algoritmo de rutas basándose en los datos históricos recopilados por el TMS.</li>
         </ul>
     </div>
 
     <div class="section">
-        <h2>4. Diagrama BPMN (Proceso de Mejora)</h2>
-        <p>El siguiente diagrama está modelado en estándar BPMN 2.0. Representa la interacción entre el personal y el nuevo Sistema de Información.</p>
+        <h2>4. Modelado BPMN Completo (To-Be)</h2>
+        <p>El siguiente diagrama está modelado en estándar BPMN 2.0 e incluye Pools (Cliente y Empresa Logística), Lanes (Carriles de responsabilidad), Gateways (Compuertas) y Flujos de Mensaje entre participantes.</p>
         
         <div id="bpmn-container"></div>
-        <p class="hint">Interactividad: Puedes hacer clic y arrastrar para mover el diagrama, y usar la rueda del ratón para hacer zoom.</p>
+        <p class="hint">Interactividad: Puedes hacer zoom, arrastrar elementos, y usar la paleta de la izquierda para editar el diagrama en vivo durante tu presentación.</p>
     </div>
 
     <script>
-        // XML válido de BPMN 2.0 con coordenadas (BPMNDI) para renderizado
         const bpmnXML = `<?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  
   <bpmn:collaboration id="Collaboration_1">
-    <bpmn:participant id="Participant_1" name="Proceso de Gestión de Entregas" processRef="Process_1" />
+    <bpmn:participant id="Participant_Cliente" name="Cliente" processRef="Process_Cliente" />
+    <bpmn:participant id="Participant_Logistica" name="LogiFast (Empresa Logística)" processRef="Process_Logistica" />
+    <bpmn:messageFlow id="MessageFlow_1" sourceRef="Task_Cliente_Enviar" targetRef="StartEvent_Log" />
+    <bpmn:messageFlow id="MessageFlow_2" sourceRef="Task_TMS_Actualizar" targetRef="Task_Cliente_Recibir" />
   </bpmn:collaboration>
-  <bpmn:process id="Process_1" isExecutable="false">
+
+  <bpmn:process id="Process_Cliente" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_Cliente" name="Necesidad de envío">
+      <bpmn:outgoing>Flow_C1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sendTask id="Task_Cliente_Enviar" name="Enviar Solicitud">
+      <bpmn:incoming>Flow_C1</bpmn:incoming>
+      <bpmn:outgoing>Flow_C2</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:receiveTask id="Task_Cliente_Recibir" name="Recibir Pedido">
+      <bpmn:incoming>Flow_C2</bpmn:incoming>
+      <bpmn:outgoing>Flow_C3</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:endEvent id="EndEvent_Cliente" name="Fin">
+      <bpmn:incoming>Flow_C3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_C1" sourceRef="StartEvent_Cliente" targetRef="Task_Cliente_Enviar" />
+    <bpmn:sequenceFlow id="Flow_C2" sourceRef="Task_Cliente_Enviar" targetRef="Task_Cliente_Recibir" />
+    <bpmn:sequenceFlow id="Flow_C3" sourceRef="Task_Cliente_Recibir" targetRef="EndEvent_Cliente" />
+  </bpmn:process>
+
+  <bpmn:process id="Process_Logistica" isExecutable="false">
     <bpmn:laneSet id="LaneSet_1">
-      <bpmn:lane id="Lane_1" name="Personal (Despachador/Conductor)">
-        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_1</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_4</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>EndEvent_1</bpmn:flowNodeRef>
+      <bpmn:lane id="Lane_Despacho" name="Despachador">
+        <bpmn:flowNodeRef>StartEvent_Log</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Desp_Verificar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Desp_Aprobado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_Log_Rechazado</bpmn:flowNodeRef>
       </bpmn:lane>
-      <bpmn:lane id="Lane_2" name="Sistema de Información (TMS)">
-        <bpmn:flowNodeRef>Task_2</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_3</bpmn:flowNodeRef>
+      <bpmn:lane id="Lane_TMS" name="Sistema TMS">
+        <bpmn:flowNodeRef>Task_TMS_Ruta</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_TMS_Asignar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_TMS_Actualizar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_Log_Ok</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Conductor" name="Conductor">
+        <bpmn:flowNodeRef>Task_Cond_Recibir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Cond_Entregar</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-    
-    <bpmn:startEvent id="StartEvent_1" name="Pedido recibido">
-      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+
+    <bpmn:startEvent id="StartEvent_Log" name="Solicitud Recibida">
+      <bpmn:outgoing>Flow_L1</bpmn:outgoing>
+      <bpmn:messageEventDefinition />
     </bpmn:startEvent>
-    <bpmn:userTask id="Task_1" name="Ingresar datos al sistema">
-      <bpmn:incoming>Flow_1</bpmn:incoming>
-      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    <bpmn:userTask id="Task_Desp_Verificar" name="Verificar Solicitud">
+      <bpmn:incoming>Flow_L1</bpmn:incoming>
+      <bpmn:outgoing>Flow_L2</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:serviceTask id="Task_2" name="Calcular ruta óptima">
-      <bpmn:incoming>Flow_2</bpmn:incoming>
-      <bpmn:outgoing>Flow_3</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:serviceTask id="Task_3" name="Asignar vehículo disponible">
-      <bpmn:incoming>Flow_3</bpmn:incoming>
-      <bpmn:outgoing>Flow_4</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:userTask id="Task_4" name="Realizar y confirmar entrega">
-      <bpmn:incoming>Flow_4</bpmn:incoming>
-      <bpmn:outgoing>Flow_5</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:endEvent id="EndEvent_1" name="Proceso finalizado">
-      <bpmn:incoming>Flow_5</bpmn:incoming>
+    <bpmn:exclusiveGateway id="Gateway_Desp_Aprobado" name="¿Aprobado?">
+      <bpmn:incoming>Flow_L2</bpmn:incoming>
+      <bpmn:outgoing>Flow_L3</bpmn:outgoing>
+      <bpmn:outgoing>Flow_L4</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="EndEvent_Log_Rechazado" name="Rechazado">
+      <bpmn:incoming>Flow_L3</bpmn:incoming>
     </bpmn:endEvent>
     
-    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_1" />
-    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_1" targetRef="Task_2" />
-    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_2" targetRef="Task_3" />
-    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_3" targetRef="Task_4" />
-    <bpmn:sequenceFlow id="Flow_5" sourceRef="Task_4" targetRef="EndEvent_1" />
+    <bpmn:serviceTask id="Task_TMS_Ruta" name="Calcular Ruta Óptima">
+      <bpmn:incoming>Flow_L4</bpmn:incoming>
+      <bpmn:outgoing>Flow_L5</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_TMS_Asignar" name="Asignar Conductor">
+      <bpmn:incoming>Flow_L5</bpmn:incoming>
+      <bpmn:outgoing>Flow_L6</bpmn:outgoing>
+    </bpmn:serviceTask>
+
+    <bpmn:userTask id="Task_Cond_Recibir" name="Recibir Ruta en App">
+      <bpmn:incoming>Flow_L6</bpmn:incoming>
+      <bpmn:outgoing>Flow_L7</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_Cond_Entregar" name="Entregar Pedido">
+      <bpmn:incoming>Flow_L7</bpmn:incoming>
+      <bpmn:outgoing>Flow_L8</bpmn:outgoing>
+    </bpmn:userTask>
+
+    <bpmn:serviceTask id="Task_TMS_Actualizar" name="Actualizar Estado a Entregado">
+      <bpmn:incoming>Flow_L8</bpmn:incoming>
+      <bpmn:outgoing>Flow_L9</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_Log_Ok" name="Entrega Completada">
+      <bpmn:incoming>Flow_L9</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:sequenceFlow id="Flow_L1" sourceRef="StartEvent_Log" targetRef="Task_Desp_Verificar" />
+    <bpmn:sequenceFlow id="Flow_L2" sourceRef="Task_Desp_Verificar" targetRef="Gateway_Desp_Aprobado" />
+    <bpmn:sequenceFlow id="Flow_L3" name="No" sourceRef="Gateway_Desp_Aprobado" targetRef="EndEvent_Log_Rechazado" />
+    <bpmn:sequenceFlow id="Flow_L4" name="Sí" sourceRef="Gateway_Desp_Aprobado" targetRef="Task_TMS_Ruta" />
+    <bpmn:sequenceFlow id="Flow_L5" sourceRef="Task_TMS_Ruta" targetRef="Task_TMS_Asignar" />
+    <bpmn:sequenceFlow id="Flow_L6" sourceRef="Task_TMS_Asignar" targetRef="Task_Cond_Recibir" />
+    <bpmn:sequenceFlow id="Flow_L7" sourceRef="Task_Cond_Recibir" targetRef="Task_Cond_Entregar" />
+    <bpmn:sequenceFlow id="Flow_L8" sourceRef="Task_Cond_Entregar" targetRef="Task_TMS_Actualizar" />
+    <bpmn:sequenceFlow id="Flow_L9" sourceRef="Task_TMS_Actualizar" targetRef="EndEvent_Log_Ok" />
   </bpmn:process>
-  
+
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
-      <bpmndi:BPMNShape id="Participant_1_di" bpmnElement="Participant_1" isHorizontal="true">
-        <dc:Bounds x="150" y="80" width="850" height="300" />
+      
+      <!-- Pool Cliente -->
+      <bpmndi:BPMNShape id="Participant_Cliente_di" bpmnElement="Participant_Cliente" isHorizontal="true">
+        <dc:Bounds x="150" y="50" width="1050" height="150" />
       </bpmndi:BPMNShape>
       
-      <bpmndi:BPMNShape id="Lane_1_di" bpmnElement="Lane_1" isHorizontal="true">
-        <dc:Bounds x="180" y="80" width="820" height="150" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Lane_2_di" bpmnElement="Lane_2" isHorizontal="true">
-        <dc:Bounds x="180" y="230" width="820" height="150" />
-      </bpmndi:BPMNShape>
-      
-      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
-        <dc:Bounds x="230" y="132" width="36" height="36" />
+      <bpmndi:BPMNShape id="StartEvent_Cliente_di" bpmnElement="StartEvent_Cliente">
+        <dc:Bounds x="210" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="211" y="175" width="76" height="14" />
+          <dc:Bounds x="193" y="145" width="71" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Cliente_Enviar_di" bpmnElement="Task_Cliente_Enviar">
+        <dc:Bounds x="290" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Cliente_Recibir_di" bpmnElement="Task_Cliente_Recibir">
+        <dc:Bounds x="970" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Cliente_di" bpmnElement="EndEvent_Cliente">
+        <dc:Bounds x="1120" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1128" y="145" width="20" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       
-      <bpmndi:BPMNShape id="Task_1_di" bpmnElement="Task_1">
-        <dc:Bounds x="320" y="110" width="100" height="80" />
+      <bpmndi:BPMNEdge id="Flow_C1_di" bpmnElement="Flow_C1">
+        <di:waypoint x="246" y="120" />
+        <di:waypoint x="290" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_C2_di" bpmnElement="Flow_C2">
+        <di:waypoint x="390" y="120" />
+        <di:waypoint x="970" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_C3_di" bpmnElement="Flow_C3">
+        <di:waypoint x="1070" y="120" />
+        <di:waypoint x="1120" y="120" />
+      </bpmndi:BPMNEdge>
+      
+      <!-- Pool Logística -->
+      <bpmndi:BPMNShape id="Participant_Logistica_di" bpmnElement="Participant_Logistica" isHorizontal="true">
+        <dc:Bounds x="150" y="250" width="1050" height="420" />
       </bpmndi:BPMNShape>
       
-      <bpmndi:BPMNShape id="Task_2_di" bpmnElement="Task_2">
-        <dc:Bounds x="470" y="260" width="100" height="80" />
+      <bpmndi:BPMNShape id="Lane_Despacho_di" bpmnElement="Lane_Despacho" isHorizontal="true">
+        <dc:Bounds x="180" y="250" width="1020" height="140" />
       </bpmndi:BPMNShape>
-      
-      <bpmndi:BPMNShape id="Task_3_di" bpmnElement="Task_3">
-        <dc:Bounds x="620" y="260" width="100" height="80" />
+      <bpmndi:BPMNShape id="Lane_TMS_di" bpmnElement="Lane_TMS" isHorizontal="true">
+        <dc:Bounds x="180" y="390" width="1020" height="140" />
       </bpmndi:BPMNShape>
-      
-      <bpmndi:BPMNShape id="Task_4_di" bpmnElement="Task_4">
-        <dc:Bounds x="770" y="110" width="100" height="80" />
+      <bpmndi:BPMNShape id="Lane_Conductor_di" bpmnElement="Lane_Conductor" isHorizontal="true">
+        <dc:Bounds x="180" y="530" width="1020" height="140" />
       </bpmndi:BPMNShape>
-      
-      <bpmndi:BPMNShape id="EndEvent_1_di" bpmnElement="EndEvent_1">
-        <dc:Bounds x="920" y="132" width="36" height="36" />
+
+      <!-- Nodes in Logistica -->
+      <bpmndi:BPMNShape id="StartEvent_Log_di" bpmnElement="StartEvent_Log">
+        <dc:Bounds x="210" y="302" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="895" y="175" width="86" height="14" />
+          <dc:Bounds x="193" y="345" width="70" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      
-      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
-        <di:waypoint x="266" y="150" />
-        <di:waypoint x="320" y="150" />
+      <bpmndi:BPMNShape id="Task_Desp_Verificar_di" bpmnElement="Task_Desp_Verificar">
+        <dc:Bounds x="290" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Desp_Aprobado_di" bpmnElement="Gateway_Desp_Aprobado" isMarkerVisible="true">
+        <dc:Bounds x="430" y="295" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="421" y="271" width="68" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Log_Rechazado_di" bpmnElement="EndEvent_Log_Rechazado">
+        <dc:Bounds x="530" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="515" y="345" width="67" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_TMS_Ruta_di" bpmnElement="Task_TMS_Ruta">
+        <dc:Bounds x="405" y="420" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_TMS_Asignar_di" bpmnElement="Task_TMS_Asignar">
+        <dc:Bounds x="550" y="420" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_Cond_Recibir_di" bpmnElement="Task_Cond_Recibir">
+        <dc:Bounds x="690" y="560" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Cond_Entregar_di" bpmnElement="Task_Cond_Entregar">
+        <dc:Bounds x="840" y="560" width="100" height="80" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_TMS_Actualizar_di" bpmnElement="Task_TMS_Actualizar">
+        <dc:Bounds x="970" y="420" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Log_Ok_di" bpmnElement="EndEvent_Log_Ok">
+        <dc:Bounds x="1112" y="442" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1092" y="485" width="76" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- Edges in Logistica -->
+      <bpmndi:BPMNEdge id="Flow_L1_di" bpmnElement="Flow_L1">
+        <di:waypoint x="246" y="320" />
+        <di:waypoint x="290" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_L2_di" bpmnElement="Flow_L2">
+        <di:waypoint x="390" y="320" />
+        <di:waypoint x="430" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_L3_di" bpmnElement="Flow_L3">
+        <di:waypoint x="480" y="320" />
+        <di:waypoint x="530" y="320" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="498" y="302" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_L4_di" bpmnElement="Flow_L4">
+        <di:waypoint x="455" y="345" />
+        <di:waypoint x="455" y="420" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="466" y="375" width="9" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_L5_di" bpmnElement="Flow_L5">
+        <di:waypoint x="505" y="460" />
+        <di:waypoint x="550" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_L6_di" bpmnElement="Flow_L6">
+        <di:waypoint x="600" y="500" />
+        <di:waypoint x="600" y="600" />
+        <di:waypoint x="690" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_L7_di" bpmnElement="Flow_L7">
+        <di:waypoint x="790" y="600" />
+        <di:waypoint x="840" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_L8_di" bpmnElement="Flow_L8">
+        <di:waypoint x="890" y="560" />
+        <di:waypoint x="890" y="460" />
+        <di:waypoint x="970" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_L9_di" bpmnElement="Flow_L9">
+        <di:waypoint x="1070" y="460" />
+        <di:waypoint x="1112" y="460" />
       </bpmndi:BPMNEdge>
       
-      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
-        <di:waypoint x="420" y="150" />
-        <di:waypoint x="445" y="150" />
-        <di:waypoint x="445" y="300" />
-        <di:waypoint x="470" y="300" />
+      <!-- Message Flows -->
+      <bpmndi:BPMNEdge id="MessageFlow_1_di" bpmnElement="MessageFlow_1">
+        <di:waypoint x="340" y="160" />
+        <di:waypoint x="340" y="210" />
+        <di:waypoint x="228" y="210" />
+        <di:waypoint x="228" y="302" />
       </bpmndi:BPMNEdge>
-      
-      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
-        <di:waypoint x="570" y="300" />
-        <di:waypoint x="620" y="300" />
-      </bpmndi:BPMNEdge>
-      
-      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
-        <di:waypoint x="720" y="300" />
-        <di:waypoint x="745" y="300" />
-        <di:waypoint x="745" y="150" />
-        <di:waypoint x="770" y="150" />
-      </bpmndi:BPMNEdge>
-      
-      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
-        <di:waypoint x="870" y="150" />
-        <di:waypoint x="920" y="150" />
+      <bpmndi:BPMNEdge id="MessageFlow_2_di" bpmnElement="MessageFlow_2">
+        <di:waypoint x="1020" y="420" />
+        <di:waypoint x="1020" y="180" />
       </bpmndi:BPMNEdge>
       
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>`;
 
-        // Instanciar el visor de BPMN
-        var bpmnViewer = new BpmnJS({
-            container: '#bpmn-container'
+        // Usamos BpmnJS (Modeler) para que puedas editar y ver el panel a la izquierda
+        var bpmnModeler = new BpmnJS({
+            container: '#bpmn-container',
+            keyboard: { bindTo: document }
         });
 
-        // Cargar el diagrama XML
-        bpmnViewer.importXML(bpmnXML).then(function() {
-            var canvas = bpmnViewer.get('canvas');
+        bpmnModeler.importXML(bpmnXML).then(function() {
+            var canvas = bpmnModeler.get('canvas');
             canvas.zoom('fit-viewport');
         }).catch(function(err) {
             console.error('No se pudo cargar el diagrama BPMN', err);
