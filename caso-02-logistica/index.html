@@ -3,128 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caso 02: Proceso BPM en Logística</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Mermaid JS para generar diagrama BPMN/Secuencia automágicamente -->
-    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <title>Caso Práctico 02 - Logística</title>
+    <!-- bpmn-js para renderizar el diagrama BPMN real -->
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js/dist/assets/diagram-js.css" />
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js/dist/assets/bpmn-font/css/bpmn.css" />
+    <script src="https://unpkg.com/bpmn-js/dist/bpmn-viewer.development.js"></script>
     <style>
-        /* Modern UI Styles */
-        :root {
-            --bg: #0f172a;
-            --surface: #1e293b;
-            --primary: #3b82f6;
-            --accent: #10b981;
-            --text: #f8fafc;
-            --text-muted: #94a3b8;
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
         }
-        body { margin: 0; padding: 0; background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
-        .hero {
-            background: linear-gradient(135deg, #1e40af 0%, #0f172a 100%);
-            padding: 60px 20px;
-            text-align: center;
-            border-bottom: 4px solid var(--primary);
+        .header {
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
         }
-        .hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
-        .hero p { color: #cbd5e1; font-size: 1.2rem; max-width: 600px; margin: 0 auto; }
-        .badge { background: var(--accent); color: #fff; padding: 5px 15px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; display: inline-block; margin-bottom: 15px; }
-        
-        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-        .card { background: var(--surface); padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); }
-        .card h2 { color: var(--primary); margin-top: 0; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
-        .card h3 { color: #fff; font-size: 1.1rem; margin-top: 20px; margin-bottom: 10px; }
-        .card p { color: var(--text-muted); line-height: 1.7; }
-        .card ul { color: var(--text-muted); padding-left: 20px; line-height: 1.7; }
-        .card li { margin-bottom: 8px; }
-
-        .diagram-section { grid-column: 1 / -1; background: var(--surface); padding: 40px; border-radius: 15px; text-align: center; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow-x: auto; }
-        .diagram-section h2 { color: var(--primary); margin-top: 0; margin-bottom: 30px; }
-        .mermaid { background: #fff; padding: 20px; border-radius: 10px; display: inline-block; }
-
-        .footer { text-align: center; padding: 40px; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.1); margin-top: 40px; }
-        
-        @media (max-width: 768px) {
-            .container { grid-template-columns: 1fr; }
+        .header h1 {
+            color: #0056b3;
+            margin: 0 0 10px 0;
+        }
+        .section {
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #444;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+        /* Contenedor del visor BPMN */
+        #bpmn-container {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 4px;
+            cursor: grab;
+        }
+        #bpmn-container:active {
+            cursor: grabbing;
+        }
+        .hint {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
-    <div class="hero">
-        <div class="badge"><i class="fa-solid fa-truck-fast"></i> Rubro: Logística (Grupo 6)</div>
-        <h1>Optimización de Entregas con TMS</h1>
-        <p>Caso Práctico 02: Implementación de un proceso BPM para la mejora de gestión de flotas y distribución usando Tecnologías de la Información.</p>
+
+    <div class="header">
+        <h1>Caso Práctico 02: Procesos BPM en Logística</h1>
+        <p><strong>Grupo 6</strong> | Sistemas de Información Empresarial</p>
     </div>
 
-    <div class="container">
-        <!-- Planteamiento del Caso -->
-        <div class="card">
-            <h2><i class="fa-solid fa-briefcase"></i> Planteamiento del Caso</h2>
-            <h3>La Organización</h3>
-            <p><strong>"LogiFast Perú S.A."</strong> es una empresa de logística de última milla. Actualmente, su proceso de enrutamiento y asignación de despachos se realiza de forma manual mediante hojas de cálculo (Excel).</p>
-            
-            <h3>El Problema</h3>
-            <ul>
-                <li>Retrasos en las entregas por rutas ineficientes.</li>
-                <li>Alta carga operativa de los asesores, generando cuellos de botella.</li>
-                <li>Falta de visibilidad del estado de entrega para el cliente final.</li>
-                <li>Altos costos de combustible.</li>
-            </ul>
+    <div class="section">
+        <h2>1. Identificación del Problema</h2>
+        <p>
+            En una empresa del rubro logístico, el proceso actual de asignación de vehículos y diseño de rutas se realiza de forma manual por el área de despachos. 
+            Esto genera demoras en la salida de las unidades, ineficiencia en el consumo de combustible por rutas mal planificadas y falta de trazabilidad para informar al cliente sobre el estado de su pedido.
+        </p>
 
-            <h3>La Solución Tecnológica (TI)</h3>
-            <p>Implementar un Sistema de Gestión de Transporte (<strong>TMS</strong>) basado en la nube con telemetría GPS y algoritmos para el cálculo automático de rutas.</p>
-        </div>
+        <h2>2. Propuesta de Mejora Tecnológica</h2>
+        <p>
+            Se propone la implementación de un <strong>Sistema de Gestión de Transporte (TMS)</strong>. Este sistema de información tomará los datos del pedido y realizará el cálculo de la ruta óptima de forma automática. Además, centralizará la asignación vehicular y permitirá al conductor confirmar la entrega en tiempo real.
+        </p>
 
-        <!-- Ciclo de Vida BPM -->
-        <div class="card">
-            <h2><i class="fa-solid fa-rotate"></i> Ciclo de Vida BPM</h2>
-            <ul>
-                <li><strong>1. Diseño:</strong> Se identifica el cuello de botella en la asignación manual. Se propone integrar el ERP con un TMS para automatizar el ruteo.</li>
-                <li><strong>2. Modelado:</strong> Se diseña el nuevo flujo de trabajo (ver diagrama inferior) definiendo las interacciones entre Cliente, Sistema TMS y Conductor.</li>
-                <li><strong>3. Ejecución:</strong> Se despliega la aplicación móvil para los conductores y se enlazan las APIs de notificaciones (SMS/WhatsApp) para el cliente.</li>
-                <li><strong>4. Monitoreo:</strong> Se definen KPIs de control: <em>% de entregas perfectas (OTIF)</em> y <em>Ahorro de combustible por ruta</em>.</li>
-                <li><strong>5. Optimización:</strong> Analizar la data histórica usando Machine Learning para predecir tráfico y reducir tiempos muertos futuros.</li>
-            </ul>
-        </div>
-
-        <!-- Diagrama BPMN / Flujo (Mermaid) -->
-        <div class="diagram-section">
-            <h2><i class="fa-solid fa-project-diagram"></i> Modelado del Proceso de Mejora (To-Be)</h2>
-            <div class="mermaid">
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#eff6ff', 'primaryBorderColor': '#3b82f6', 'lineColor': '#1e293b', 'textColor': '#0f172a' }}}%%
-sequenceDiagram
-    actor C as Cliente
-    participant T as Sistema TMS (TI)
-    actor D as Conductor
-    
-    C->>T: 1. Orden de envío ingresa al sistema
-    activate T
-    Note over T: Tarea Automática:<br/>El algoritmo calcula la Ruta Óptima
-    T-->>C: 2. Notifica estado: "Pedido en camino"
-    T->>D: 3. Asigna hoja de ruta (App Móvil)
-    deactivate T
-    
-    activate D
-    D->>D: 4. Realiza trayecto guiado por GPS integrado
-    D->>T: 5. Registra firma y foto en la App (Pod)
-    deactivate D
-    
-    activate T
-    T->>T: 6. Actualiza estado a "Entregado"
-    T-->>C: 7. Envía comprobante electrónico
-    deactivate T
-            </div>
-            <p style="margin-top:20px; color:var(--text-muted); font-size:14px;"><em>Este diagrama modela la interacción entre los actores del proceso (Cliente y Conductor) orquestados mediante el Sistema de Información TMS, eliminando las intervenciones manuales de asignación.</em></p>
-        </div>
+        <h2>3. Ciclo de Vida BPM Aplicado</h2>
+        <ul>
+            <li><strong>Diseño:</strong> Levantamiento del proceso manual actual (As-Is) e identificación del cuello de botella en la asignación de rutas.</li>
+            <li><strong>Modelado:</strong> Creación del flujo de proceso mejorado (To-Be) utilizando notación estándar BPMN, separando las tareas humanas de las automatizadas por el sistema.</li>
+            <li><strong>Ejecución:</strong> Integración del nuevo software TMS con el área operativa y capacitación a los despachadores.</li>
+            <li><strong>Monitoreo:</strong> Medición de tiempos de despacho y porcentaje de entregas a tiempo.</li>
+            <li><strong>Optimización:</strong> Ajuste de los parámetros del algoritmo de rutas basándose en los datos históricos recopilados por el TMS.</li>
+        </ul>
     </div>
 
-    <div class="footer">
-        Desarrollado para Sistemas de Información Empresarial - Sesión 4 | Grupo 6
+    <div class="section">
+        <h2>4. Diagrama BPMN (Proceso de Mejora)</h2>
+        <p>El siguiente diagrama está modelado en estándar BPMN 2.0. Representa la interacción entre el personal y el nuevo Sistema de Información.</p>
+        
+        <div id="bpmn-container"></div>
+        <p class="hint">Interactividad: Puedes hacer clic y arrastrar para mover el diagrama, y usar la rueda del ratón para hacer zoom.</p>
     </div>
 
     <script>
-        mermaid.initialize({ startOnLoad: true });
+        // XML válido de BPMN 2.0 con coordenadas (BPMNDI) para renderizado
+        const bpmnXML = `<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collaboration_1">
+    <bpmn:participant id="Participant_1" name="Proceso de Gestión de Entregas" processRef="Process_1" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_1">
+      <bpmn:lane id="Lane_1" name="Personal (Despachador/Conductor)">
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_4</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_1</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_2" name="Sistema de Información (TMS)">
+        <bpmn:flowNodeRef>Task_2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_3</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    
+    <bpmn:startEvent id="StartEvent_1" name="Pedido recibido">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Task_1" name="Ingresar datos al sistema">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="Task_2" name="Calcular ruta óptima">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Task_3" name="Asignar vehículo disponible">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Task_4" name="Realizar y confirmar entrega">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="EndEvent_1" name="Proceso finalizado">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_1" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_1" targetRef="Task_2" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_2" targetRef="Task_3" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_3" targetRef="Task_4" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Task_4" targetRef="EndEvent_1" />
+  </bpmn:process>
+  
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
+      <bpmndi:BPMNShape id="Participant_1_di" bpmnElement="Participant_1" isHorizontal="true">
+        <dc:Bounds x="150" y="80" width="850" height="300" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Lane_1_di" bpmnElement="Lane_1" isHorizontal="true">
+        <dc:Bounds x="180" y="80" width="820" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_2_di" bpmnElement="Lane_2" isHorizontal="true">
+        <dc:Bounds x="180" y="230" width="820" height="150" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="230" y="132" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="211" y="175" width="76" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_1_di" bpmnElement="Task_1">
+        <dc:Bounds x="320" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_2_di" bpmnElement="Task_2">
+        <dc:Bounds x="470" y="260" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_3_di" bpmnElement="Task_3">
+        <dc:Bounds x="620" y="260" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_4_di" bpmnElement="Task_4">
+        <dc:Bounds x="770" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="EndEvent_1_di" bpmnElement="EndEvent_1">
+        <dc:Bounds x="920" y="132" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="895" y="175" width="86" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="266" y="150" />
+        <di:waypoint x="320" y="150" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="420" y="150" />
+        <di:waypoint x="445" y="150" />
+        <di:waypoint x="445" y="300" />
+        <di:waypoint x="470" y="300" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="570" y="300" />
+        <di:waypoint x="620" y="300" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="720" y="300" />
+        <di:waypoint x="745" y="300" />
+        <di:waypoint x="745" y="150" />
+        <di:waypoint x="770" y="150" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="870" y="150" />
+        <di:waypoint x="920" y="150" />
+      </bpmndi:BPMNEdge>
+      
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>`;
+
+        // Instanciar el visor de BPMN
+        var bpmnViewer = new BpmnJS({
+            container: '#bpmn-container'
+        });
+
+        // Cargar el diagrama XML
+        bpmnViewer.importXML(bpmnXML).then(function() {
+            var canvas = bpmnViewer.get('canvas');
+            canvas.zoom('fit-viewport');
+        }).catch(function(err) {
+            console.error('No se pudo cargar el diagrama BPMN', err);
+        });
     </script>
 </body>
 </html>
