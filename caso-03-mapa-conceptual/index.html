@@ -8,14 +8,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <!-- Vis.js para el grafo interactivo -->
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <!-- tsParticles para fondo deslumbrante -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.11.0/tsparticles.bundle.min.js"></script>
+    <!-- FontAwesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Fondo animado -->
-    <div class="bg-animated"></div>
+    <!-- Fondo de partículas -->
+    <div id="tsparticles"></div>
 
     <header>
-        <h1>Sistemas de Información Empresarial</h1>
+        <h1><i class="fa-solid fa-network-wired"></i> Sistemas de Información Empresarial</h1>
         <p>Sesión 4: Modelado de Procesos y BPMN (Caso 03)</p>
     </header>
 
@@ -25,9 +30,18 @@
         
         <!-- Panel de detalles flotante (Glassmorphism) -->
         <div id="info-panel" class="hidden">
-            <button id="close-btn">&times;</button>
+            <button id="close-btn"><i class="fa-solid fa-xmark"></i></button>
             <h2 id="info-title">Título</h2>
             <p id="info-desc">Selecciona un nodo para ver los detalles aquí.</p>
+        </div>
+
+        <!-- Panel de Controles Inferior -->
+        <div class="controls-panel">
+            <button onclick="focusArea('center')"><i class="fa-solid fa-expand"></i> Ver Todo</button>
+            <button onclick="focusArea('bpm')"><i class="fa-solid fa-gears"></i> Fases BPM</button>
+            <button onclick="focusArea('bpmn')"><i class="fa-solid fa-bezier-curve"></i> Metodología BPMN</button>
+            <button onclick="focusArea('tipos')"><i class="fa-solid fa-layer-group"></i> Tipos de Procesos</button>
+            <button onclick="focusArea('arq')"><i class="fa-solid fa-sitemap"></i> Arquetipos</button>
         </div>
     </div>
 
