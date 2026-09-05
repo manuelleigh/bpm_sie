@@ -2,24 +2,89 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=caso-03-mapa-conceptual/index.html" />
-    <title>Redirigiendo...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio - Grupo 6</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background-color: #0f172a;
-            color: #f8fafc;
-            font-family: sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        body { 
+            background: #080c16; 
+            color: #f8fafc; 
+            font-family: 'Poppins', sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            margin: 0;
+            background-image: radial-gradient(circle at center, #1e293b 0%, #080c16 100%);
         }
-        a {
+        .container {
+            text-align: center;
+            background: rgba(15, 23, 42, 0.7);
+            padding: 50px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            max-width: 800px;
+            width: 90%;
+        }
+        h1 { color: #00d2ff; font-weight: 700; font-size: 2.2rem; margin-bottom: 5px; }
+        h2 { color: #94a3b8; font-weight: 400; font-size: 1.2rem; margin-bottom: 40px; }
+        .links { 
+            display: flex; 
+            gap: 25px; 
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        a { 
+            background: rgba(30, 41, 59, 0.8); 
+            padding: 30px 40px; 
+            text-decoration: none; 
+            color: #fff; 
+            border-radius: 15px; 
+            border: 1px solid #3b82f6; 
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            font-size: 1.3rem; 
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            width: 260px;
+        }
+        a i {
+            font-size: 2.5rem;
             color: #00d2ff;
+            transition: 0.3s;
+        }
+        a:hover { 
+            background: #3b82f6; 
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5); 
+            transform: translateY(-8px); 
+        }
+        a:hover i {
+            color: #fff;
         }
     </style>
 </head>
 <body>
-    <p>Redirigiendo al Caso 03: Mapa Conceptual... Si no eres redirigido, <a href="caso-03-mapa-conceptual/index.html">haz clic aquí</a>.</p>
+    <div class="container">
+        <h1>Sistemas de Información Empresarial</h1>
+        <h2>Portafolio de Trabajos - Sesión 4 | <strong>Grupo 6</strong></h2>
+        
+        <div class="links">
+            <a href="caso-02-logistica/">
+                <i class="fa-solid fa-truck-fast"></i>
+                Caso 02: Logística
+            </a>
+            <a href="caso-03-mapa-conceptual/">
+                <i class="fa-solid fa-network-wired"></i>
+                Caso 03: Mapa Interactivo
+            </a>
+        </div>
+    </div>
 </body>
 </html>

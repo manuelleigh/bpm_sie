@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caso 02: Proceso BPM en Logística</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Mermaid JS para generar diagrama BPMN/Secuencia automágicamente -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        /* Modern UI Styles */
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --primary: #3b82f6;
+            --accent: #10b981;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+        body { margin: 0; padding: 0; background-color: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
+        .hero {
+            background: linear-gradient(135deg, #1e40af 0%, #0f172a 100%);
+            padding: 60px 20px;
+            text-align: center;
+            border-bottom: 4px solid var(--primary);
+        }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .hero p { color: #cbd5e1; font-size: 1.2rem; max-width: 600px; margin: 0 auto; }
+        .badge { background: var(--accent); color: #fff; padding: 5px 15px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; display: inline-block; margin-bottom: 15px; }
+        
+        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .card { background: var(--surface); padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); }
+        .card h2 { color: var(--primary); margin-top: 0; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
+        .card h3 { color: #fff; font-size: 1.1rem; margin-top: 20px; margin-bottom: 10px; }
+        .card p { color: var(--text-muted); line-height: 1.7; }
+        .card ul { color: var(--text-muted); padding-left: 20px; line-height: 1.7; }
+        .card li { margin-bottom: 8px; }
+
+        .diagram-section { grid-column: 1 / -1; background: var(--surface); padding: 40px; border-radius: 15px; text-align: center; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow-x: auto; }
+        .diagram-section h2 { color: var(--primary); margin-top: 0; margin-bottom: 30px; }
+        .mermaid { background: #fff; padding: 20px; border-radius: 10px; display: inline-block; }
+
+        .footer { text-align: center; padding: 40px; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,0.1); margin-top: 40px; }
+        
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="badge"><i class="fa-solid fa-truck-fast"></i> Rubro: Logística (Grupo 6)</div>
+        <h1>Optimización de Entregas con TMS</h1>
+        <p>Caso Práctico 02: Implementación de un proceso BPM para la mejora de gestión de flotas y distribución usando Tecnologías de la Información.</p>
+    </div>
+
+    <div class="container">
+        <!-- Planteamiento del Caso -->
+        <div class="card">
+            <h2><i class="fa-solid fa-briefcase"></i> Planteamiento del Caso</h2>
+            <h3>La Organización</h3>
+            <p><strong>"LogiFast Perú S.A."</strong> es una empresa de logística de última milla. Actualmente, su proceso de enrutamiento y asignación de despachos se realiza de forma manual mediante hojas de cálculo (Excel).</p>
+            
+            <h3>El Problema</h3>
+            <ul>
+                <li>Retrasos en las entregas por rutas ineficientes.</li>
+                <li>Alta carga operativa de los asesores, generando cuellos de botella.</li>
+                <li>Falta de visibilidad del estado de entrega para el cliente final.</li>
+                <li>Altos costos de combustible.</li>
+            </ul>
+
+            <h3>La Solución Tecnológica (TI)</h3>
+            <p>Implementar un Sistema de Gestión de Transporte (<strong>TMS</strong>) basado en la nube con telemetría GPS y algoritmos para el cálculo automático de rutas.</p>
+        </div>
+
+        <!-- Ciclo de Vida BPM -->
+        <div class="card">
+            <h2><i class="fa-solid fa-rotate"></i> Ciclo de Vida BPM</h2>
+            <ul>
+                <li><strong>1. Diseño:</strong> Se identifica el cuello de botella en la asignación manual. Se propone integrar el ERP con un TMS para automatizar el ruteo.</li>
+                <li><strong>2. Modelado:</strong> Se diseña el nuevo flujo de trabajo (ver diagrama inferior) definiendo las interacciones entre Cliente, Sistema TMS y Conductor.</li>
+                <li><strong>3. Ejecución:</strong> Se despliega la aplicación móvil para los conductores y se enlazan las APIs de notificaciones (SMS/WhatsApp) para el cliente.</li>
+                <li><strong>4. Monitoreo:</strong> Se definen KPIs de control: <em>% de entregas perfectas (OTIF)</em> y <em>Ahorro de combustible por ruta</em>.</li>
+                <li><strong>5. Optimización:</strong> Analizar la data histórica usando Machine Learning para predecir tráfico y reducir tiempos muertos futuros.</li>
+            </ul>
+        </div>
+
+        <!-- Diagrama BPMN / Flujo (Mermaid) -->
+        <div class="diagram-section">
+            <h2><i class="fa-solid fa-project-diagram"></i> Modelado del Proceso de Mejora (To-Be)</h2>
+            <div class="mermaid">
+%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#eff6ff', 'primaryBorderColor': '#3b82f6', 'lineColor': '#1e293b', 'textColor': '#0f172a' }}}%%
+sequenceDiagram
+    actor C as Cliente
+    participant T as Sistema TMS (TI)
+    actor D as Conductor
+    
+    C->>T: 1. Orden de envío ingresa al sistema
+    activate T
+    Note over T: Tarea Automática:<br/>El algoritmo calcula la Ruta Óptima
+    T-->>C: 2. Notifica estado: "Pedido en camino"
+    T->>D: 3. Asigna hoja de ruta (App Móvil)
+    deactivate T
+    
+    activate D
+    D->>D: 4. Realiza trayecto guiado por GPS integrado
+    D->>T: 5. Registra firma y foto en la App (Pod)
+    deactivate D
+    
+    activate T
+    T->>T: 6. Actualiza estado a "Entregado"
+    T-->>C: 7. Envía comprobante electrónico
+    deactivate T
+            </div>
+            <p style="margin-top:20px; color:var(--text-muted); font-size:14px;"><em>Este diagrama modela la interacción entre los actores del proceso (Cliente y Conductor) orquestados mediante el Sistema de Información TMS, eliminando las intervenciones manuales de asignación.</em></p>
+        </div>
+    </div>
+
+    <div class="footer">
+        Desarrollado para Sistemas de Información Empresarial - Sesión 4 | Grupo 6
+    </div>
+
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</body>
+</html>
